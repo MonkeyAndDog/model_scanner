@@ -8,9 +8,9 @@ from pathlib import Path
 
 # 使用字符串模式生成代码
 def generate_by_string_template(str_template=template.str_template_dao,
-                                generate_file_object="temp", fill=None):
+                                generate_file_object="temp", metadata=None):
     # 读字符串方式初始化模板代码
-    if fill is None:
+    if metadata is None:
         print("空的代码元信息")
         return
     read_contents = str_template.split("\n")
@@ -19,14 +19,14 @@ def generate_by_string_template(str_template=template.str_template_dao,
         if read_content == "":
             result_content += "\n"
         if read_content.endswith("{"):
-            result_content += read_content[0:-2].format(**fill)
+            result_content += read_content[0:-2].format(**metadata)
             result_content += "{"
             continue
         if read_content.endswith("}"):
             result_content += read_content
             continue
         else:
-            result_content += read_content.format(**fill)
+            result_content += read_content.format(**metadata)
     wr_code = open(generate_file_object, mode="w", encoding="utf-8")
     wr_code.write(result_content)
 
@@ -59,13 +59,13 @@ class Generator(object):
         wr_code.write(result_content)
 
     def generate_dao(self):
-        for fill in self.__fill_obj:
-            file_name = fill.get('model_name') + fill.get('level').title() + ".java"
+        for metadata in self.__fill_obj:
+            file_name = metadata.get('model_name') + metadata.get('level').title() + ".java"
             generator_path = Path(
                 ".\\" + (self.__store.get('src_dir'))[
                         :self.__store.get('src_dir').find("\\model")] + "\\dao\\").absolute()
             if not generator_path.exists():
                 generator_path.mkdir()
             generate_by_string_template(
-                generate_file_object=str(generator_path) + "\\" + file_name, fill=fill)
+                generate_file_object=str(generator_path) + "\\" + file_name, metadata=metadata)
             print("在" + str(generator_path) + file_name + "生成了：" + file_name)

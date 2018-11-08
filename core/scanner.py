@@ -24,7 +24,7 @@ class Scanner(object):
 
     def __init__(self):
         self.__models = []
-        self.__fill_obj = []
+        self.__metadata_list = []
         self.__store = {}
 
     def load_models(self, dir_name):
@@ -33,7 +33,7 @@ class Scanner(object):
                 self.__store['src_dir'] = str(pro_dir.parent)
                 self.__models.append(str(pro_dir))
                 package_name = get_package_name(self.__models[0])
-                self.__fill_obj.append({
+                self.__metadata_list.append({
                     'package_name': package_name,
                     'model_name': pro_dir.stem,
                     'dao_name': pro_dir.stem + 'Dao',
@@ -48,7 +48,7 @@ class Scanner(object):
         return self.__models
 
     def get_fill_obj(self):
-        return self.__fill_obj
+        return self.__metadata_list
 
     def get__store(self):
         return self.__store
